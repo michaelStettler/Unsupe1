@@ -20,7 +20,7 @@ def kohonen():
     # select 4 digits    
     name = 'Marc-oliver Gewaltig' # REPLACE BY YOUR OWN NAME
     targetdigits = name2digits(name) # assign the four digits that should be used
-    print targetdigits # output the digits that were selected
+    print(targetdigits) # output the digits that were selected
     # this selects all data vectors that corresponds to one of the four digits
     data = data[np.logical_or.reduce([labels==x for x in targetdigits]),:]
     
@@ -140,5 +140,6 @@ def name2digits(name):
 
 
 if __name__ == "__main__":
-    kohonen()
+#    print(name2digits('Michael Stettler')) #[2 5 7 9]
+#    kohonen()
 
