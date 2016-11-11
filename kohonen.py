@@ -8,7 +8,7 @@ import matplotlib.pylab as plb
 def kohonen():
     """Example for using create_data, plot_data and som_step.
     """
-    plb.close('all')
+#    plb.close('all')
     
     dim = 28*28
     data_range = 255.0
@@ -18,9 +18,9 @@ def kohonen():
     labels = np.loadtxt('labels.txt')
 
     # select 4 digits    
-    name = 'Marc-oliver Gewaltig' # REPLACE BY YOUR OWN NAME
     targetdigits = name2digits(name) # assign the four digits that should be used
     print(targetdigits) # output the digits that were selected
+
     # this selects all data vectors that corresponds to one of the four digits
     data = data[np.logical_or.reduce([labels==x for x in targetdigits]),:]
     
@@ -63,7 +63,52 @@ def kohonen():
     # leave the window open at the end of the loop
     plb.show()
     plb.draw()
-   
+
+    
+def run_kohonen(data, size_k=6, sigma=2.0, eta=0.9, tmax=5000):
+    """
+    
+    """
+    
+    dy, dx = data.shape
+    
+    #set the size of the Kohonen map. In this case it will be 6 X 6
+    size_k = 6
+    
+    #set the width of the neighborhood via the width of the gaussian that
+    #describes it
+    sigma = 2.0
+    
+    #initialise the centers randomly
+    centers = np.random.rand(size_k**2, dim) * data_range
+    
+    #build a neighborhood matrix
+    neighbor = np.arange(size_k**2).reshape((size_k, size_k))
+
+    #set the learning rate
+    eta = 0.9 # HERE YOU HAVE TO SET YOUR OWN LEARNING RATE
+    
+    #set the maximal iteration count
+    tmax = 5000 # this might or might not work; use your own convergence criterion
+    
+    #set the random order in which the datapoints should be presented
+    i_random = np.arange(tmax) % dy
+    np.random.shuffle(i_random)
+    
+    for t, i in enumerate(i_random):
+        som_step(centers, data[i,:],neighbor,eta,sigma)
+
+
+    # for visualization, you can use this:
+    for i in range(size_k**2):
+        plb.subplot(size_k,size_k,i)
+        
+        plb.imshow(np.reshape(centers[i,:], [28, 28]),interpolation='bilinear')
+        plb.axis('off')
+        
+    # leave the window open at the end of the loop
+    plb.show()
+    plb.draw()
     
 
 def som_step(centers,data,neighbor,eta,sigma):
