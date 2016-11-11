@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import kohonen as ko
 
-def VisualizeSample(sample):
+def visualizeSample(sample):
     
     if np.shape(sample) == (784,):
         sample = np.reshape(sample, (28,28))
@@ -25,7 +25,7 @@ def VisualizeSample(sample):
     
     else:
         for d in sample:
-            VisualizeSample(d)
+            visualizeSample(d)
     return None
     
 
@@ -36,7 +36,7 @@ def filterData(data, labels, name):
 
     # this selects all data vectors that corresponds to one of the four digits
     data = data[np.logical_or.reduce([labels==x for x in targetdigits]),:]
-    labels = labels[np.logical_or.reduce([labels==x for x in targetdigits]),:]
+    labels = labels[np.logical_or.reduce([labels==x for x in targetdigits])]
 
     return data, labels
     
@@ -44,9 +44,10 @@ def filterData(data, labels, name):
 if __name__ == "__main__":
     print('Test visualize')
     data = np.loadtxt('data.txt')
+    labels = np.loadtxt('labels.txt')
     sample = data[0]
-    VisualizeSample(sample)
+    visualizeSample(sample)
     
     sample = data[0:3]
-    VisualizeSample(sample)
+    visualizeSample(sample)
     
