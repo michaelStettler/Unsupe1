@@ -59,9 +59,10 @@ def rmseSample(sample1,sample2):
 if __name__ == "__main__":
     print('Test visualize')
     data = np.loadtxt('data.txt')
+    labels = np.loadtxt('labels.txt')
     sample = data[0]
-    VisualizeSample(sample)
+    visualizeSample(sample)
     
     sample = data[0:3]
-    VisualizeSample(sample)
+    visualizeSample(sample)
     

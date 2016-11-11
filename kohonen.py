@@ -65,32 +65,23 @@ def kohonen():
     plb.draw()
 
     
-def run_kohonen(data, size_k=6, sigma=2.0, eta=0.9, tmax=5000):
+def run_kohonen(data, size_k: int=6, sigma: float=2.0, eta: int=0.9, tmax: int=5000):
     """
-    
+    data = data
+    size_k = size of the kohonen map
+    sigma = width of Gaussian
+    eta =  learning rate
+    tmax = maximal iteration count
     """
     dim = 28*28
     data_range = 255.0
     dy, dx = data.shape
-    
-    #set the size of the Kohonen map. In this case it will be 6 X 6
-    size_k = 6
-    
-    #set the width of the neighborhood via the width of the gaussian that
-    #describes it
-    sigma = 2.0
     
     #initialise the centers randomly
     centers = np.random.rand(size_k**2, dim) * data_range
     
     #build a neighborhood matrix
     neighbor = np.arange(size_k**2).reshape((size_k, size_k))
-
-    #set the learning rate
-    eta = 0.9 # HERE YOU HAVE TO SET YOUR OWN LEARNING RATE
-    
-    #set the maximal iteration count
-    tmax = 5000 # this might or might not work; use your own convergence criterion
     
     #set the random order in which the datapoints should be presented
     i_random = np.arange(tmax) % dy
@@ -99,8 +90,7 @@ def run_kohonen(data, size_k=6, sigma=2.0, eta=0.9, tmax=5000):
     for t, i in enumerate(i_random):
         som_step(centers, data[i,:],neighbor,eta,sigma)
 
-
-    """    # for visualization, you can use this:
+    """ # for visualization, you can use this:
     for i in range(size_k**2):
         plb.subplot(size_k,size_k,i)
         
@@ -109,8 +99,7 @@ def run_kohonen(data, size_k=6, sigma=2.0, eta=0.9, tmax=5000):
         
     # leave the window open at the end of the loop
     plb.show()
-    plb.draw()"""
-    
+    plb.draw() """
     return centers
     
 
@@ -131,7 +120,6 @@ def som_step(centers,data,neighbor,eta,sigma):
        sigma    (scalar) the width of the gaussian neighborhood function.
                          Effectively describing the width of the neighborhood
     """
-    
     size_k = int(np.sqrt(len(centers)))
     
     #find the best matching unit via the minimal distance to the datapoint
