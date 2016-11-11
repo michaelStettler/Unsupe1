@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import kohonen as ko
 
-def VisualizeSample(sample):
+def visualizeSample(sample):
     
     if np.shape(sample) == (784,):
         sample = np.reshape(sample, (28,28))
@@ -25,7 +25,7 @@ def VisualizeSample(sample):
     
     else:
         for d in sample:
-            VisualizeSample(d)
+            visualizeSample(d)
     return None
     
 
@@ -36,11 +36,26 @@ def filterData(data, labels, name):
 
     # this selects all data vectors that corresponds to one of the four digits
     data = data[np.logical_or.reduce([labels==x for x in targetdigits]),:]
-    labels = labels[np.logical_or.reduce([labels==x for x in targetdigits]),:]
+    labels = labels[np.logical_or.reduce([labels==x for x in targetdigits])]
 
     return data, labels
     
+
+def averageSample(data,labels,targetDigits):
     
+    dt_mean = []
+    for i in targetDigits :
+        dt = data[np.where(labels == i),:][0]
+        dt_mean.append(np.mean(dt,axis=0))
+        
+    print(np.shape(dt_mean))
+    
+    return dt_mean
+
+
+def rmseSample(sample1,sample2):
+    return np.sqrt(np.mean(np.power(sample1-sample2,2)))
+
 if __name__ == "__main__":
     print('Test visualize')
     data = np.loadtxt('data.txt')
