@@ -18,6 +18,7 @@ def kohonen():
     labels = np.loadtxt('labels.txt')
 
     # select 4 digits    
+    name = "Stettler"
     targetdigits = name2digits(name) # assign the four digits that should be used
     print(targetdigits) # output the digits that were selected
 
@@ -88,6 +89,45 @@ def run_kohonen(data, size_k: int=6, sigma: float=2.0, eta: int=0.9, tmax: int=5
     np.random.shuffle(i_random)
     
     for t, i in enumerate(i_random):
+        som_step(centers, data[i,:],neighbor,eta,sigma)
+
+    """ # for visualization, you can use this:
+    for i in range(size_k**2):
+        plb.subplot(size_k,size_k,i)
+        
+        plb.imshow(np.reshape(centers[i,:], [28, 28]),interpolation='bilinear')
+        plb.axis('off')
+        
+    # leave the window open at the end of the loop
+    plb.show()
+    plb.draw() """
+    return centers
+
+
+def run_kohonen_dynamicLearningRate(data, size_k: int=6, sigma: float=2.0, tmax: int=5000, fun):
+    """
+    data = data
+    size_k = size of the kohonen map
+    sigma = width of Gaussian
+    tmax = maximal iteration count
+    fun = function of t that will be use to compute the learning rate at each time step.
+    """
+    dim = 28*28
+    data_range = 255.0
+    dy, dx = data.shape
+    
+    #initialise the centers randomly
+    centers = np.random.rand(size_k**2, dim) * data_range
+    
+    #build a neighborhood matrix
+    neighbor = np.arange(size_k**2).reshape((size_k, size_k))
+    
+    #set the random order in which the datapoints should be presented
+    i_random = np.arange(tmax) % dy
+    np.random.shuffle(i_random)
+    
+    for t, i in enumerate(i_random):
+        eta = fun(t)
         som_step(centers, data[i,:],neighbor,eta,sigma)
 
     """ # for visualization, you can use this:

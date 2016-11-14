@@ -9,15 +9,29 @@ import matplotlib.pyplot as plt
 import numpy as np
 import kohonen as ko
 
-def visualizeSample(sample):
+def visualizeSample(sample, size_k=None):
+  
+    if size_k:
+        plt.figure(figsize=(2.5 * int(size_k), 2.5 * int(size_k)))
+        for i, sample_ in enumerate(sample):    
+            plt.subplot(size_k, size_k, i+1)
+            s = np.reshape(sample_, (28,28))
+            s = s[::-1, :]  #reverse lines for visualisation purpose
+        
+            #heatmap
+            plt.pcolor(s, cmap=plt.get_cmap('jet'), vmin=0, vmax=255)
+            plt.axis('off')
+            plt.xlim([0, 27])
+            plt.ylim([0, 27])
+        plt.show()
     
-    if np.shape(sample) == (784,):
+    elif np.shape(sample) == (784,):
         sample = np.reshape(sample, (28,28))
         sample = sample[::-1, :]  #reverse lines for visualisation purpose
         
         #heatmap
         plt.figure(figsize=(5,5))
-        plt.pcolor(sample, cmap=plt.get_cmap('gray'), vmin=0, vmax=255)
+        plt.pcolor(sample, cmap=plt.get_cmap('jet'), vmin=0, vmax=255)
         plt.axis('off')
         plt.xlim([0, 27])
         plt.ylim([0, 27])
@@ -55,6 +69,7 @@ def averageSample(data,labels,targetDigits):
 
 def rmseSample(sample1,sample2):
     return np.sqrt(np.mean(np.power(sample1-sample2,2)))
+
 
 if __name__ == "__main__":
     print('Test visualize')
