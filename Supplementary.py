@@ -2,7 +2,7 @@
 """
 Created on Fri Nov 11 08:57:09 2016
 
-@author: jb
+@author: jb & michael
 """
 
 import matplotlib.pyplot as plt
@@ -67,8 +67,8 @@ def averageSample(data,labels,targetDigits):
     return dt_mean
 
 
-def rmseSample(sample1,sample2):
-    return np.sqrt(np.mean(np.power(sample1-sample2,2)))
+def distance_btw_Sample(sample1,sample2):
+    return np.sum(np.power(sample1-sample2,2))
 
 
 if __name__ == "__main__":
