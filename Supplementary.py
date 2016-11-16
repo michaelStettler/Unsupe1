@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import kohonen as ko
 
-def visualizeSample(sample, size_k=None):
+def visualizeSample(sample, size_k=None,labels=None):
   
     if size_k:
         plt.figure(figsize=(2.5 * int(size_k), 2.5 * int(size_k)))
@@ -23,6 +23,10 @@ def visualizeSample(sample, size_k=None):
             plt.axis('off')
             plt.xlim([0, 27])
             plt.ylim([0, 27])
+            if labels != None:
+                plt.xlabel(labels[i])
+                plt.title(labels[i])
+           
         plt.show()
     
     elif np.shape(sample) == (784,):

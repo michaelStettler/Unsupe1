@@ -95,10 +95,10 @@ def run_kohonen(data, size_k: int=6, sigma: float=2.0, eta: int=0.9, tmax: int=5
     
     for t, i in enumerate(i_random):
         som_step(centers, data[i,:],neighbor,eta,sigma)
-        if t % 1000 == 0:
-            error.append(calculate_error(centers,data))
-            if np.abs(error[-2]-error[-1]) < eps :
-                break
+        #if t % 100 == 0:
+            #error.append(calculate_error(centers,data))
+            #if np.abs(error[-2]-error[-1]) < eps :
+                #break
     """ # for visualization, you can use this:
     for i in range(size_k**2):
         plb.subplot(size_k,size_k,i)
@@ -114,7 +114,7 @@ def run_kohonen(data, size_k: int=6, sigma: float=2.0, eta: int=0.9, tmax: int=5
     return centers
 
 
-def run_kohonen_dynamicLearningRate(data, fun, size_k: int=6, sigma: float=2.0, tmax: int=5000):
+def run_kohonen_dynamicLearningRate(data,fun,size_k: int=6, eta: float=0.1, tmax: int=5000):
     """
     data = data
     size_k = size of the kohonen map
@@ -137,7 +137,7 @@ def run_kohonen_dynamicLearningRate(data, fun, size_k: int=6, sigma: float=2.0, 
     np.random.shuffle(i_random)
     
     for t, i in enumerate(i_random):
-        eta = fun(t)
+        sigma = fun(t)
         som_step(centers, data[i,:],neighbor,eta,sigma)
 
     """ # for visualization, you can use this:
