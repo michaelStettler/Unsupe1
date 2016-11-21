@@ -4,7 +4,8 @@ Reinforcement Learning.
 
 import numpy as np
 from Supplementary import *
-import matplotlib.pylab as plb
+import matplotlib.pyplot as plb
+from copy import copy
 
 def kohonen():
     """Example for using create_data, plot_data and som_step.
@@ -54,7 +55,6 @@ def kohonen():
     for t, i in enumerate(i_random):
         som_step(centers, data[i,:],neighbor,eta,sigma)
 
-
     # for visualization, you can use this:
     for i in range(size_k**2):
         plb.subplot(size_k,size_k,i)
@@ -67,7 +67,8 @@ def kohonen():
     plb.draw()
 
     
-def run_kohonen(data, size_k: int=6, sigma: float=2.0, eta: int=0.9, tmax: int=5000):
+def run_kohonen(data, size_k: int=6, sigma: float=2.0, eta: int=0.9, 
+                tmax: int=5000, convergence=0):
     """
     data = data
     size_k = size of the kohonen map
@@ -78,7 +79,10 @@ def run_kohonen(data, size_k: int=6, sigma: float=2.0, eta: int=0.9, tmax: int=5
     dim = 28*28
     data_range = 255.0
     dy, dx = data.shape
-    eps = 0.05
+    
+    #convergence criteria
+    eps = 1E-6
+    eps_2 = 0.1
     
     #initialise the centers randomly
     centers = np.random.rand(size_k**2, dim) * data_range
@@ -91,14 +95,28 @@ def run_kohonen(data, size_k: int=6, sigma: float=2.0, eta: int=0.9, tmax: int=5
     np.random.shuffle(i_random)
     
     #error for convergence criterion
-    error = [10000]
+    error = [np.inf]
     
+    print('start iteration')
     for t, i in enumerate(i_random):
-        som_step(centers, data[i,:],neighbor,eta,sigma)
-        #if t % 100 == 0:
-            #error.append(calculate_error(centers,data))
-            #if np.abs(error[-2]-error[-1]) < eps :
-                #break
+        old_centers = copy(centers)
+        som_step(centers, data[int(i),:],neighbor,eta,sigma)
+            
+        if t % 1E6 == 0:
+            print('iteration {}'.format(t))
+            
+        error.append(calculate_error(centers,data))
+        if convergence == 1:
+            #convergence: distance between samples and best matching prototypes 
+            if np.abs((error[-2]-error[-1])/error[1]) < eps :
+                break
+        elif convergence == 2:
+            #convergence: non significant weight update
+            err = np.abs(centers-old_centers)
+            error.append(np.sum(err))
+            if (err < eps_2).all():
+                break
+            
     """ # for visualization, you can use this:
     for i in range(size_k**2):
         plb.subplot(size_k,size_k,i)
@@ -110,8 +128,8 @@ def run_kohonen(data, size_k: int=6, sigma: float=2.0, eta: int=0.9, tmax: int=5
     plb.show()
     plb.draw() """
     
-    plb.plot(error[1:])
-    return centers
+    print('Total iteration : {}'.format(t))
+    return centers, error
 
 
 def run_kohonen_dynamicLearningRate(data,fun,size_k: int=6, eta: float=0.1, tmax: int=5000):
@@ -235,8 +253,7 @@ def calculate_error(center,samples):
         for c in center:
             error_temp.append(distance_btw_Sample(s,c))
         error_samples.append(np.min(error_temp))
-    
-    
+
     return np.mean(error_samples)
     
     
