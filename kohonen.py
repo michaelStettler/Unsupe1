@@ -102,17 +102,14 @@ def run_kohonen(data, size_k: int=6, sigma: float=2.0, eta: int=0.9,
         old_centers = copy(centers)
         som_step(centers, data[int(i),:],neighbor,eta,sigma)
             
-        if t % 1E6 == 0:
         if t % 1E4 == 0:
             print('iteration {}'.format(t))
-            
         
         error.append(calculate_error(centers,data))
         if convergence == 1:
             #convergence: distance between samples and best matching prototypes 
             if np.abs((error[-2]-error[-1])/error[1]) < eps :
                 break
-        elif convergence == 2:
                 
         if convergence == 2:
             #convergence: non significant weight update
