@@ -46,10 +46,17 @@ nb_exp = 100
 it_max = 1000
 for eta in [1E-1]:#, 1E-3, 1E-2, 1E-1, 1]:
     print('eta={}'.format(eta))
+<<<<<<< HEAD
     centers = np.zeros((nb_exp, 36, 28*28))
     error = np.zeros((nb_exp, it_max))
     for i in range(nb_exp):
         cent, err = run_kohonen(data_filtered, size_k=6, sigma=3.0, eta=eta, tmax=it_max, convergence=2)
+=======
+    centers = np.zeros((10, 36, 28*28))
+    error = np.zeros((10, int(1E6 -1)))
+    for i in range(10):
+        cent, err = run_kohonen(data_filtered, size_k=6, sigma=3.0, eta=eta, tmax=1E5, convergence=0)
+>>>>>>> origin/master
         centers[i, : , :] = cent
         error[i, :] = err 
     np.save('save', centers, error)
