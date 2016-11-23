@@ -67,6 +67,7 @@ for eta in [1E-4, 1E-3, 1E-2, 1E-1, 1]:
     error = np.zeros((10, int(1E6 -1)))
     for i in range(10):
         cent, err = run_kohonen(data_filtered, size_k=6, sigma=3.0, eta=eta, tmax=1E6, convergence=0)
+        cent, err = run_kohonen(data_filtered, size_k=6, sigma=3.0, eta=eta, tmax=1E5, convergence=0)
         centers[i, : , :] = cent
         error[i, :] = error 
     np.save('save_eta={}'.format(eta), (centers, error))
