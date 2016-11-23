@@ -105,17 +105,18 @@ def run_kohonen(data, size_k: int=6, sigma: float=2.0, eta: int=0.9,
         if t % 1E6 == 0:
             print('iteration {}'.format(t))
             
-        error.append(calculate_error(centers,data))
         if convergence == 1:
             #convergence: distance between samples and best matching prototypes 
-            if np.abs((error[-2]-error[-1])/error[1]) < eps :
-                break
+            error.append(calculate_error(centers,data))
+#            if np.abs((error[-2]-error[-1])/error[1]) < eps :
+#                break
+            
         elif convergence == 2:
             #convergence: non significant weight update
-            err = np.abs(centers-old_centers)
-            error.append(np.sum(err))
-            if (err < eps_2).all():
-                break
+            err = np.linalg.norm(centers-old_centers)
+            error.append(err)
+#            if err < eps_2:
+#                break
             
     """ # for visualization, you can use this:
     for i in range(size_k**2):
@@ -129,7 +130,7 @@ def run_kohonen(data, size_k: int=6, sigma: float=2.0, eta: int=0.9,
     plb.draw() """
     
     print('Total iteration : {}'.format(t))
-    return centers, error
+    return centers, error[1:]
 
 
 def run_kohonen_dynamicLearningRate(data,fun,size_k: int=6, eta: float=0.1, tmax: int=5000):

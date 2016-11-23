@@ -105,15 +105,15 @@ def visualizeError(error, opt=1):
         for err in error:
             SEM = np.std(err, axis=0)/float(np.sqrt(np.shape(err)[0]))
             EM = np.mean(err, axis=0)
-            plt.semilogx(EM)
-            plt.fill_between(np.arrange(len(SEM)), EM + SEM, EM - SEM, alpha=0.5)
+            plt.plot(EM)
+            plt.fill_between(np.arange(len(SEM)), EM + SEM, EM - SEM, alpha=0.5)
     elif opt == 2:
         SEM = np.std(error, axis=0)/float(np.sqrt(np.shape(error)[0]))
         EM = np.mean(error, axis=0)
-        plt.semilogx(EM)
-        plt.fill_between(np.arrange(len(SEM)), EM + SEM, EM - SEM, alpha=0.5)
+        plt.plot(EM)
+        plt.fill_between(np.arange(len(SEM)), EM + SEM, EM - SEM, alpha=0.5)
     else:
-        plt.semilogx(error)
+        plt.plot(error)
         
     plt.xlabel('iterations')
     plt.ylabel('Error')

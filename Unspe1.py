@@ -3,7 +3,6 @@ from kohonen import *
 from Supplementary import *
 import numpy as np
 
-<<<<<<< HEAD
 name = "Stettler"
 nameDigit = name2digits(name)
 print(nameDigit)
@@ -12,7 +11,6 @@ print(nameDigit)
 data = np.loadtxt("data.txt")
 labels = np.loadtxt("labels.txt")
 
-=======
 #Obtain set of digit
 name = "Stettler"
 nameDigit = name2digits(name)
@@ -23,35 +21,18 @@ data = np.loadtxt("data.txt")
 labels = np.loadtxt("labels.txt")
 
 #keep data corresponding to the digit
->>>>>>> origin/master
 data_filtered, labels_flitered = filterData(data,labels,name)
 #print(np.shape(data_filtered))
 #visualizeSample(data[0])
 
-<<<<<<< HEAD
-centers = run_kohonen(data_filtered, size_k=6, sigma=3.0, eta=0.1, tmax=30000)
-visualizeSample(centers, size_k=6)
 
-average_digit = averageSample(data_filtered, labels_flitered, nameDigit)
-visualizeSample(average_digit)
-
-digits = []
-for center in centers:
-    rmses = []
-    for digit in average_digit:
-        rmses.append(distance_btw_Sample(center,digit))
-    
-    digits.append(nameDigit[np.argmin(rmses)])
-    
-print(digits)
-=======
 #%%
-#average_digit = averageSample(data_filtered, labels_flitered, nameDigit)
-#
-#for e in np.arange(0.1, 1, 0.1):
-#    centers = run_kohonen(data_filtered, size_k=6, sigma=3.0, eta=e, tmax=1E6, convergence=0)
-#    digits = assignDigit(centers, average_digit, nameDigit)
-#    visualizeSample(centers, size_k=6, labels=digits)
+average_digit = averageSample(data_filtered, labels_flitered, nameDigit)
+
+#centers, error = run_kohonen(data_filtered, size_k=6, sigma=3.0, eta=0.1, tmax=100, convergence=2)
+#digits = assignDigit(centers, average_digit, nameDigit)
+#visualizeSample(centers, size_k=6, labels=digits)
+#visualizeError(error, opt=1)
 
 #%%
 """
@@ -61,19 +42,21 @@ Second Point:
     - 6x6 Kohonen map
     - TODO: Implement convergence function    
 """
-for eta in [1E-4, 1E-3, 1E-2, 1E-1, 1]:
+nb_exp = 100
+it_max = 1000
+for eta in [1E-1]:#, 1E-3, 1E-2, 1E-1, 1]:
     print('eta={}'.format(eta))
-    centers = np.zeros((10, 36, 28*28))
-    error = np.zeros((10, int(1E6 -1)))
-    for i in range(10):
-        cent, err = run_kohonen(data_filtered, size_k=6, sigma=3.0, eta=eta, tmax=1E6, convergence=0)
+    centers = np.zeros((nb_exp, 36, 28*28))
+    error = np.zeros((nb_exp, it_max))
+    for i in range(nb_exp):
+        cent, err = run_kohonen(data_filtered, size_k=6, sigma=3.0, eta=eta, tmax=it_max, convergence=2)
         centers[i, : , :] = cent
-        error[i, :] = error 
-    np.save('save_eta={}'.format(eta), (centers, error))
+        error[i, :] = err 
+    np.save('save', centers, error)
 #average_digit = averageSample(data_filtered, labels_flitered, nameDigit)
-#digits = assignDigit(centers, average_digit, nameDigit)
-#visualizeSample(centers, size_k=6, labels=digits)
-#visualizeError(error, opt=1)
+digits = assignDigit(centers[0, : ,:], average_digit, nameDigit)
+visualizeSample(centers[0, : ,:], size_k=6, labels=digits)
+visualizeError(error, opt=2)
 
 
 #==============================================================================
@@ -122,10 +105,4 @@ for eta in [1E-4, 1E-3, 1E-2, 1E-1, 1]:
 # visualizeFun(fun, tmax)
 # visualizeSample(centers, size_k=6)
 #==============================================================================
-
->>>>>>> origin/master
-
-
-
-
 
