@@ -9,11 +9,18 @@ import matplotlib.pyplot as plt
 import numpy as np
 import kohonen as ko
 
-def visualizeSample(sample, size_k=None):
+def visualizeSample(sample, size_k=None, labels=None):
+    if not labels:
+        if np.shape(sample) == (784,):
+            labels = ''
+        else:
+            labels = [''] * len(sample)
+#    else:
+#        labels = ['Digit {}'.format(l) for l in labels]
   
     if size_k:
         plt.figure(figsize=(2.5 * int(size_k), 2.5 * int(size_k)))
-        for i, sample_ in enumerate(sample):    
+        for i, (sample_, label) in enumerate(zip(sample, labels)):    
             plt.subplot(size_k, size_k, i+1)
             s = np.reshape(sample_, (28,28))
             s = s[::-1, :]  #reverse lines for visualisation purpose
@@ -23,7 +30,9 @@ def visualizeSample(sample, size_k=None):
             plt.axis('off')
             plt.xlim([0, 27])
             plt.ylim([0, 27])
-        plt.show()
+            plt.text(1.5, 20, label, fontsize=30, color='white')
+           
+        plt.draw()
     
     elif np.shape(sample) == (784,):
         sample = np.reshape(sample, (28,28))
@@ -35,11 +44,12 @@ def visualizeSample(sample, size_k=None):
         plt.axis('off')
         plt.xlim([0, 27])
         plt.ylim([0, 27])
-        plt.show()
+        plt.text(1.5, 23, labels, fontsize=40, color='white')
+        plt.draw()
     
     else:
-        for d in sample:
-            visualizeSample(d)
+        for d, l in zip(sample, labels):
+            visualizeSample(d, labels=l)
     return None
     
 
@@ -56,7 +66,6 @@ def filterData(data, labels, name):
     
 
 def averageSample(data,labels,targetDigits):
-    
     dt_mean = []
     for i in targetDigits :
         dt = data[np.where(labels == i),:][0]
@@ -68,15 +77,55 @@ def averageSample(data,labels,targetDigits):
 
 
 def distance_btw_Sample(sample1,sample2):
-    return np.sum(np.power(sample1-sample2,2))
+    return np.sqrt(np.sum(np.power(sample1-sample2,2)))
+    
 
+def assignDigit(centers, average, nameDigit):
+    digits = []
+    for center in centers:
+        rmses = []
+        for digit in average:
+            rmses.append(distance_btw_Sample(center,digit))
+        
+        digits.append(nameDigit[np.argmin(rmses)])
+    return digits
+
+    
+def visualizeFun(fun, xmax=None):    
+    plt.figure()
+    x = np.arange(xmax)
+    plt.plot(x, fun(x))
+    plt.draw()
+    return None
+
+
+def visualizeError(error, opt=1):
+    plt.figure()
+    if opt == 3:
+        for err in error:
+            SEM = np.std(err, axis=0)/float(np.sqrt(np.shape(err)[0]))
+            EM = np.mean(err, axis=0)
+            plt.semilogx(EM)
+            plt.fill_between(np.arrange(len(SEM)), EM + SEM, EM - SEM, alpha=0.5)
+    elif opt == 2:
+        SEM = np.std(error, axis=0)/float(np.sqrt(np.shape(error)[0]))
+        EM = np.mean(error, axis=0)
+        plt.semilogx(EM)
+        plt.fill_between(np.arrange(len(SEM)), EM + SEM, EM - SEM, alpha=0.5)
+    else:
+        plt.semilogx(error)
+        
+    plt.xlabel('iterations')
+    plt.ylabel('Error')
+    plt.draw()
+    return None
 
 if __name__ == "__main__":
     print('Test visualize')
     data = np.loadtxt('data.txt')
     labels = np.loadtxt('labels.txt')
     sample = data[0]
-    visualizeSample(sample)
+    visualizeSample(sample, labels='5')
     
     sample = data[0:3]
     visualizeSample(sample)
