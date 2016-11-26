@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import kohonen as ko
 
-def visualizeSample(sample, size_k=None, labels=None):
+def visualizeSample(sample, size_k=None, labels=None, title=None):
     if not labels:
         if np.shape(sample) == (784,):
             labels = ''
@@ -31,7 +31,11 @@ def visualizeSample(sample, size_k=None, labels=None):
             plt.xlim([0, 27])
             plt.ylim([0, 27])
             plt.text(1.5, 20, label, fontsize=30, color='white')
-           
+        
+        if title:
+            plt.suptitle(title, fontsize=30)
+            plt.tight_layout()
+            plt.subplots_adjust(top=0.95)
         plt.draw()
     
     elif np.shape(sample) == (784,):
@@ -45,6 +49,8 @@ def visualizeSample(sample, size_k=None, labels=None):
         plt.xlim([0, 27])
         plt.ylim([0, 27])
         plt.text(1.5, 23, labels, fontsize=40, color='white')
+        if title:
+            plt.title(title)
         plt.draw()
     
     else:
@@ -99,24 +105,31 @@ def visualizeFun(fun, xmax=None):
     return None
 
 
-def visualizeError(error, opt=1):
+def visualizeError(error, opt=1, legend=None):
+    
     plt.figure()
-    if opt == 3:
-        for err in error:
+    if opt == 3: #several parameters tested several times
+        cmap = plt.get_cmap('RdBu')
+        color = cmap(np.linspace(0, 1, len(error)))
+        for err, c in zip(error, color):
             SEM = np.std(err, axis=0)/float(np.sqrt(np.shape(err)[0]))
             EM = np.mean(err, axis=0)
-            plt.plot(EM)
-            plt.fill_between(np.arange(len(SEM)), EM + SEM, EM - SEM, alpha=0.5)
-    elif opt == 2:
+            plt.loglog(EM, color=c, linewidth=2)
+            plt.fill_between(np.arange(len(SEM)), EM + SEM, EM - SEM, color=c, alpha=0.5)
+        if legend:
+            plt.legend(legend)
+            
+    elif opt == 2: #one parameter tested several times
         SEM = np.std(error, axis=0)/float(np.sqrt(np.shape(error)[0]))
         EM = np.mean(error, axis=0)
         plt.plot(EM)
         plt.fill_between(np.arange(len(SEM)), EM + SEM, EM - SEM, alpha=0.5)
-    else:
+        
+    else: #one parameter tested one time.
         plt.plot(error)
         
-    plt.xlabel('iterations')
-    plt.ylabel('Error')
+    plt.xlabel('iterations', fontsize=15)
+    plt.ylabel(r'$||\Delta\omega_j||$', fontsize=15)
     plt.draw()
     return None
 
